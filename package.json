@@ -1,0 +1,35 @@
+{
+  "name": "cheqreport",
+  "version": "1.0.0",
+  "description": "Console application used to generate custom cheqroom reports",
+  "main": "bin/index.js",
+  "bin": {
+    "cheqreport": "bin/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cheqroom",
+    "report",
+    "console",
+    "binary"
+  ],
+  "author": "Miro Koprnicky",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "node-fetch": "^3.2.10",
+    "yargs": "^17.5.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Netsyde-Systems/cheqreport.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Netsyde-Systems/cheqreport/issues"
+  },
+  "homepage": "https://github.com/Netsyde-Systems/cheqreport#readme"
+}

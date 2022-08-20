@@ -20,9 +20,6 @@ const post = async (url, data, headers) => {
 
 export class Api {
 
-	constructor() {
-	}
-
 	async auth(user, password) {
 		return new Promise((resolve, reject) => {
 			post(`${API_URL}/authenticate`, { user, password })
@@ -77,6 +74,14 @@ export class Api {
 
 	async getAllReservations() {
 		return this.getAllData(`reservations`)
+	}
+
+	async getCustomers(limit, skip) {
+		return this.getData(`customers`, limit, skip) 
+	}
+
+	async getAllCustomers() {
+		return this.getAllData(`customers`)
 	}
 }
 

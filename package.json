@@ -1,7 +1,7 @@
 {
   "name": "cheqreport",
   "version": "1.0.0",
-  "description": "Console application used to generate custom cheqroom reports",
+  "description": "A command line utility for creating custom cheqroom reports",
   "main": "bin/index.js",
   "bin": {
     "cheqreport": "bin/index.js"
@@ -23,7 +23,6 @@
     "node-fetch": "^3.2.10",
     "yargs": "^17.5.1"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Netsyde-Systems/cheqreport.git"

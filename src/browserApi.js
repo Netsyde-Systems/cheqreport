@@ -1,3 +1,5 @@
+// Deprecated, since cheqroom-core doesn't appear to play nice with NodeJS 
+// Leaving in place for now in case we want to make compatible in browser in the future
 const cr = require('cheqroom-core')
 
 var baseUrl = 'https://api.cheqroom.com/api/v2_5'

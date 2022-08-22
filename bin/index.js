@@ -7,20 +7,19 @@ import _yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 const yargs = _yargs(hideBin(process.argv));
 
-// we use dotevn to parse the .env file which can store user/pass info
-import dotenv from 'dotenv'
-
-dotenv.config()
-
 // const BrowserApi = require('../src/browserApi')
 import ServerApi from '../src/serverApi.js'
 import { CostPerProjectReport } from '../src/reports/CostPerProjectReport.js'
 
-import { docs as customerDocs  } from '../dataSamples/customers_search.js'
+/* test data
+import { docs as customerDocs } from '../dataSamples/customers_search.js'
 import { docs as itemDocs } from '../dataSamples/items_search.js'
-import { docs as reservationDocs  } from '../dataSamples/reservations_search.js'
+import { docs as reservationDocs } from '../dataSamples/reservations_search.js'
+*/
+
 import { defaultFilepath, timestampFilename } from '../src/utility.js'
 import { ExcelCreator } from '../src/ExcelCreator.js'
+import { EnvFileFactory } from '../src/EnvFileFactory.js'
 
 yargs
 	.scriptName("cheqreport")
@@ -34,48 +33,83 @@ yargs
 			describe: 'the name of the custom report'
 		})
 	}, async function (argv) {
-		console.log('reportname: ', argv.reportname)
-		console.log('user: ', process.env.USER)
-		console.log('pass: ', process.env.PASS)
+		// TODO: add support for different report types in the future
+		const reportname = argv.reportname
 
-		/*
-		const api = new ServerApi()
-		await api.auth(process.env.USER, process.env.PASS)
+		const envFactory = new EnvFileFactory()
 
-		const customers = await api.getAllCustomers()
-		const items = await api.getAllItems()
-		const reservations = await api.getAllReservations()
-		*/
+		if (!envFactory.userId || !envFactory.jwt) {
+			console.error("You must first authenticate via 'cheqreport auth <user> <password>'")
+		}
+		else {
 
-		const customers = customerDocs
-		const items = itemDocs
-		const reservations = reservationDocs
+			const api = new ServerApi(envFactory.userId, envFactory.jwt)
 
-		const report = new CostPerProjectReport(customers, items, reservations)
+			try {
+				const customers = await api.getAllCustomers()
+				const items = await api.getAllItems()
+				const reservations = await api.getAllReservations()
 
-		const excelCreator = new ExcelCreator()
+				/* load test data
+				const customers = customerDocs
+				const items = itemDocs
+				const reservations = reservationDocs
+				*/
 
-		excelCreator.addSheet(report.summary, 'Summary')
-		excelCreator.addSheet(report.details, 'Details')
+				// TODO: add support for different report types in the future
+				const report = new CostPerProjectReport(customers, items, reservations)
 
-		const filename = defaultFilepath('CostPerProject')
-		excelCreator.saveFile(filename)
+				const excelCreator = new ExcelCreator()
+
+				excelCreator.addSheet(report.summary, 'Summary')
+				excelCreator.addSheet(report.details, 'Details')
+
+				const filename = defaultFilepath('CostPerProject')
+				excelCreator.saveFile(filename)
+
+				console.log(`Your cheqreport has been successfully saved to: ${filename}`)
+			}
+			catch (ex) {
+				console.error(ex)
+				console.error("It's possible your auth token has expired and you may have to reauthenticate via 'cheqreport auth <user> <password>'")
+			}
+
+		}
+
 	})
 
 	// authenticates user
 	.command('auth <user> <password>', 'Authenticates user against cheqroom API', (yargs) => {
 		yargs.positional('user', {
 			type: 'string',
-			alias: 'u', 
+			alias: 'u',
 			describe: 'cheqroom account email'
 		})
 		yargs.positional('password', {
 			type: 'string',
-			alias: 'p', 
+			alias: 'p',
 			describe: 'cheqroom account password'
 		})
-	}, function (argv) {
-		console.log(`user: ${argv.user} password: ${argv.password}`)
+	}, async function (argv) {
+		const { user, password } = argv
+
+		const api = new ServerApi()
+
+		try {
+			await api.auth(user, password)
+
+			const envFactory = new EnvFileFactory()
+
+			envFactory.userId = api.userId
+			envFactory.jwt = api.jwt
+
+			envFactory.updateEnvFile()
+
+			console.log('You have successfully authenticated; you may now generate a cheqreport.')
+		}
+		catch (ex) {
+			console.error(ex)
+		}
 	})
 
 	// setup help as default command

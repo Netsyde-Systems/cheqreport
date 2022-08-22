@@ -52,3 +52,9 @@ export function timestampFilename(filename, ext) {
 	const stampedFilename =  filename + "_" + timestamp + "." + ext
 	return stampedFilename
 }
+
+export function joinWithNewLines() {
+	const args = Array.prototype.slice.call(arguments)
+	const joined = args.join("\n")
+	return joined
+}

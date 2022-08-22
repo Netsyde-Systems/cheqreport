@@ -1,7 +1,7 @@
 // Apparently the cheqroom-core npm library is purpose built for the browser (bombs out in node)
 // We are going to call the api directly, as demonstrated here: https://github.com/CHECKROOM/checkroom_core_js/issues/2
-
 import fetch from 'node-fetch'
+import { joinWithNewLines } from './utility.js'
 
 const API_URL = 'https://app.cheqroom.com/api/v2_5'
 
@@ -17,17 +17,30 @@ const post = async (url, data, headers) => {
 	return response.json();
 }
 
-
 export class Api {
+	userId = null
+	jwt = null
+
+	constructor(userId, jwt) {
+		this.userId = userId
+		this.jwt = jwt
+	}
 
 	async auth(user, password) {
 		return new Promise((resolve, reject) => {
 			post(`${API_URL}/authenticate`, { user, password })
-				.then(resp => {
-					const { jwt, userId } = resp.data;
-					this.jwt = jwt
-					this.userId = userId
-					resolve()
+				.then(response => {
+					const { status, message } = response
+
+					if (status == 'ERROR') {
+						reject(joinWithNewLines(status, message))
+					}
+					else {
+						const { userId, jwt } = response.data;
+						this.userId = userId
+						this.jwt = jwt
+						resolve()
+					}
 				})
 		})
 	}
@@ -39,11 +52,17 @@ export class Api {
 	}
 
 	async getData(dataName, limit = 20, skip = 0) {
-		let { docs, count } = await this.apiCall(`${dataName}/search`, {
+		let response = await this.apiCall(`${dataName}/search`, {
 			_limit: limit,
 			_skip: skip 
 		})
-		return docs
+
+		const { httpError, status, message } = response
+
+		if (httpError) {
+			throw joinWithNewLines(status, message, httpError)
+		}
+		else return response.docs
 	}
 
 	async getAllData(dataName) {

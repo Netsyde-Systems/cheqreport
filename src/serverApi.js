@@ -39,10 +39,11 @@ export class Api {
 	}
 
 	async getData(dataName, limit = 20, skip = 0) {
-		return this.apiCall(`${dataName}/search`, {
+		let { docs, count } = await this.apiCall(`${dataName}/search`, {
 			_limit: limit,
 			_skip: skip 
 		})
+		return docs
 	}
 
 	async getAllData(dataName) {
@@ -51,7 +52,7 @@ export class Api {
 		let skip = 0
 
 		do {
-			let { docs, count } = await this.getData(dataName, 100, skip)
+			let docs = await this.getData(dataName, 100, skip)
 			allDocs = allDocs.concat(docs)
 			docsLength = docs.length
 			skip += docsLength

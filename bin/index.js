@@ -16,9 +16,9 @@ dotenv.config()
 import ServerApi from '../src/serverApi.js'
 import { CostPerProjectReport } from '../src/reports/CostPerProjectReport.js'
 
-import { response as customersResponse  } from '../dataSamples/customers_search.js'
-import { response as itemsResponse } from '../dataSamples/items_search.js'
-import { response as reservationsResponse  } from '../dataSamples/reservations_search.js'
+import { docs as customerDocs  } from '../dataSamples/customers_search.js'
+import { docs as itemDocs } from '../dataSamples/items_search.js'
+import { docs as reservationDocs  } from '../dataSamples/reservations_search.js'
 
 yargs
 	.scriptName("cheqreport")
@@ -40,14 +40,14 @@ yargs
 		const api = new ServerApi()
 		await api.auth(process.env.USER, process.env.PASS)
 
+		const customers = await api.getAllCustomers()
 		const items = await api.getAllItems()
 		const reservations = await api.getAllReservations()
-		const customers = await api.getCustomers()
 		*/
 
-		const customers = customersResponse.docs
-		const items = itemsResponse.docs
-		const reservations = reservationsResponse.docs
+		const customers = customerDocs
+		const items = itemDocs
+		const reservations = reservationDocs
 
 		const report = new CostPerProjectReport(customers, items, reservations)
 

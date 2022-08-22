@@ -1,3 +1,8 @@
+import os from 'os'
+import path from 'path'
+
+const homedir = os.homedir()
+
 export function makeDictionary(arr, keySeletor) {
 	const dictionary = arr.reduce((dic, obj) => {
 		dic[keySeletor(obj)] = obj
@@ -34,4 +39,16 @@ export function getRentalMagnitudePerDay(rentalMagnitude, rentalUnit) {
 export function roundTo(value, numDecimals) {
 	const powTen = 10 ** numDecimals
 	return Math.round(value * powTen) / powTen
+}
+
+export function defaultFilepath(reportName) {
+	const timestampedFilename = timestampFilename(reportName, 'xlsx') 
+	const fullpath = path.join(homedir, timestampedFilename)
+	return fullpath
+}
+
+export function timestampFilename(filename, ext) {
+	const timestamp = new Date().toISOString().replaceAll(":", "-").replaceAll(".", "_")
+	const stampedFilename =  filename + "_" + timestamp + "." + ext
+	return stampedFilename
 }

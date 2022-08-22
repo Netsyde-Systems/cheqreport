@@ -21,6 +21,7 @@
   "dependencies": {
     "dotenv": "^16.0.1",
     "node-fetch": "^3.2.10",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.18.10/xlsx-0.18.10.tgz",
     "yargs": "^17.5.1"
   },
   "repository": {

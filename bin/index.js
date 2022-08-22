@@ -19,6 +19,8 @@ import { CostPerProjectReport } from '../src/reports/CostPerProjectReport.js'
 import { docs as customerDocs  } from '../dataSamples/customers_search.js'
 import { docs as itemDocs } from '../dataSamples/items_search.js'
 import { docs as reservationDocs  } from '../dataSamples/reservations_search.js'
+import { defaultFilepath, timestampFilename } from '../src/utility.js'
+import { ExcelCreator } from '../src/ExcelCreator.js'
 
 yargs
 	.scriptName("cheqreport")
@@ -51,8 +53,13 @@ yargs
 
 		const report = new CostPerProjectReport(customers, items, reservations)
 
+		const excelCreator = new ExcelCreator()
 
-		const test = 7
+		excelCreator.addSheet(report.summary, 'Summary')
+		excelCreator.addSheet(report.details, 'Details')
+
+		const filename = defaultFilepath('CostPerProject')
+		excelCreator.saveFile(filename)
 	})
 
 	// authenticates user

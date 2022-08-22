@@ -46,8 +46,11 @@ yargs
 			const api = new ServerApi(envFactory.userId, envFactory.jwt)
 
 			try {
+				console.log('Loading customers...')
 				const customers = await api.getAllCustomers()
+				console.log('Loading equipment...')
 				const items = await api.getAllItems()
+				console.log('Loading reservations...')
 				const reservations = await api.getAllReservations()
 
 				/* load test data
@@ -57,6 +60,7 @@ yargs
 				*/
 
 				// TODO: add support for different report types in the future
+				console.log(`Creating ${reportname} Report`)
 				const report = new CostPerProjectReport(customers, items, reservations)
 
 				const excelCreator = new ExcelCreator()
@@ -64,7 +68,7 @@ yargs
 				excelCreator.addSheet(report.summary, 'Summary')
 				excelCreator.addSheet(report.details, 'Details')
 
-				const filename = defaultFilepath('CostPerProject')
+				const filename = defaultFilepath(reportname)
 				excelCreator.saveFile(filename)
 
 				console.log(`Your cheqreport has been successfully saved to: ${filename}`)

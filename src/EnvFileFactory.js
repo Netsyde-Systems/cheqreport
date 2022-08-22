@@ -1,14 +1,25 @@
 import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { parse, stringify } from 'envfile'
 
+// we hack dirname because it's not available when using ECM modules
+// https://stackoverflow.com/questions/46745014/alternative-for-dirname-in-node-js-when-using-es6-modules
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+const ENV_FILE_PATH = path.join(__dirname, '..', '.env')
+
 function parseDotEnv() {
-	const envContents = fs.readFileSync('.env')
+	if (!fs.existsSync(ENV_FILE_PATH)) {
+		fs.writeFileSync(ENV_FILE_PATH, '')
+	}
+	const envContents = fs.readFileSync(ENV_FILE_PATH)
 	const parsed = parse(envContents)
 	return parsed
 }
 
 function writeDotEnv(envObject) {
-	fs.writeFileSync('.env', stringify(envObject))
+	fs.writeFileSync(ENV_FILE_PATH, stringify(envObject))
 }
 
 export class EnvFileFactory {

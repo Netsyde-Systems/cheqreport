@@ -1,6 +1,6 @@
 import { makeDictionary, getDurationInDays, getRentalPercentageParts, getRentalMagnitudePerDay, roundTo } from '../utility.js'
 
-export class CostPerProjectReport {
+export class ProjectRentalCosts {
 	constructor(customers, items, reservations) {
 		const { details, summary }  = createReport(customers, items, reservations)
 
@@ -17,7 +17,7 @@ export class CostPerProjectReport {
 	}
 }
 
-export default CostPerProjectReport
+export default ProjectRentalCosts
 
 
 function createReport(customers, items, reservations) {

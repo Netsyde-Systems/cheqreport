@@ -9,7 +9,7 @@ const yargs = _yargs(hideBin(process.argv));
 
 // const BrowserApi = require('../src/browserApi')
 import ServerApi from '../src/serverApi.js'
-import { CostPerProjectReport } from '../src/reports/CostPerProjectReport.js'
+import { ProjectRentalCosts } from '../src/reports/ProjectRentalCosts.js'
 
 /* test data
 import { docs as customerDocs } from '../dataSamples/customers_search.js'
@@ -29,7 +29,7 @@ yargs
 	.command('run [reportname]', 'Runs custom report', (yargs) => {
 		yargs.positional('reportname', {
 			type: 'string',
-			default: 'projectrental',
+			default: 'projectrentalcosts',
 			describe: 'the name of the custom report'
 		})
 	}, async function (argv) {
@@ -61,7 +61,7 @@ yargs
 
 				// TODO: add support for different report types in the future
 				console.log(`Creating ${reportname} Report`)
-				const report = new CostPerProjectReport(customers, items, reservations)
+				const report = new ProjectRentalCosts(customers, items, reservations)
 
 				const excelCreator = new ExcelCreator()
 

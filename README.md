@@ -47,8 +47,7 @@ This will store your Cheqroom userid and a jwt token for future use.  Subsequent
 
 `cheqreport run`
 
-which should present you with output similar to the following.  Note that it is normal for the data loading process to take several seconds.  
-
+This command should present you with output similar to the following.  Note that it is normal for the data loading process to take several seconds.  
 
 ```
 Loading customers...
@@ -58,9 +57,8 @@ Creating projectrentalcosts Report
 Your cheqreport has been successfully saved to: C:\Users\username\projectrentalcosts_2022-08-23T01-07-04_328Z.xlsx
 ```
 
-
 At this time, only the requested *projectrentalcosts* report has been created.  It is run by default regardless of the reportname parameter provided, or even if it is is omitted.  
 
-Future reports should be easy to create since authentication, data api integration, token storage, and excel reporting logic has already been implemented. At that point, various reports will be executed by name: 
+Future reports should be easy to create since authentication, data api integration, token storage, and excel reporting logic has already been implemented. If and when more than report is available to execute, they will be specified by name: 
 
 `cheqreport run reportname`

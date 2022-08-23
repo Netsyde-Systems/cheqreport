@@ -1,3 +1,8 @@
+// ******************************************************
+// Handles writing and formatting Excel File
+// ******************************************************
+
+
 import * as fs from 'fs'
 import { utils, writeFile, set_fs } from 'xlsx'
 

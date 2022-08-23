@@ -1,3 +1,7 @@
+// ***********************************
+// Useful reusable logic and functions
+// ***********************************
+
 import os from 'os'
 import path from 'path'
 
@@ -11,10 +15,12 @@ export function makeDictionary(arr, keySeletor) {
 	return dictionary
 }
 
+export const MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24
+
 export function getDurationInDays(fromDate, toDate) {
 	const durationInMs = toDate - fromDate
-	const durationInDays = durationInMs / 1000 / 60 / 60 / 24
-	const roundedDurationInDays = Math.round(durationInDays * 100) / 100
+	const durationInDays = durationInMs / MILLISECONDS_IN_A_DAY
+	const roundedDurationInDays = roundTo(durationInDays, 2) 
 	return roundedDurationInDays
 }
 

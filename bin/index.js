@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 
+// *************************************
+// Main program entry point
+// Parses user input and provides output
+// *************************************
+
+
 // we use yargs for console command parsing
 // https://yargs.js.org/
 // brutal import syntax: https://stackoverflow.com/a/70481818
@@ -17,7 +23,7 @@ import { docs as itemDocs } from '../dataSamples/items_search.js'
 import { docs as reservationDocs } from '../dataSamples/reservations_search.js'
 */
 
-import { defaultFilepath, timestampFilename } from '../src/utility.js'
+import { defaultFilepath } from '../src/utility.js'
 import { ExcelCreator } from '../src/ExcelCreator.js'
 import { EnvFileFactory } from '../src/EnvFileFactory.js'
 
@@ -34,8 +40,11 @@ yargs
 		})
 	}, async function (argv) {
 		// TODO: add support for different report types in the future
+
+		// pull reportname from command line
 		const reportname = argv.reportname
 
+		// pull user's id and token from .env file
 		const envFactory = new EnvFileFactory()
 
 		if (!envFactory.userId || !envFactory.jwt) {
@@ -68,6 +77,7 @@ yargs
 				excelCreator.addSheet('Summary', report.summary, report.summaryFormats)
 				excelCreator.addSheet('Details', report.details, report.detailsFormats)
 
+				// save excel output as timestamped file to user's home directory
 				const filename = defaultFilepath(reportname)
 				excelCreator.saveFile(filename)
 
@@ -95,18 +105,20 @@ yargs
 			describe: 'cheqroom account password'
 		})
 	}, async function (argv) {
+
+		// pull credentials from command line
 		const { user, password } = argv
 
 		const api = new ServerApi()
 
 		try {
+			// attempt to authenticate
 			await api.auth(user, password)
 
+			// save id and token if successful
 			const envFactory = new EnvFileFactory()
-
 			envFactory.userId = api.userId
 			envFactory.jwt = api.jwt
-
 			envFactory.updateEnvFile()
 
 			console.log('You have successfully authenticated; you may now generate a cheqreport.')

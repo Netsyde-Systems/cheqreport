@@ -1,7 +1,19 @@
+// *************************************
+// Project Rental Costs Report
+// Defines report data and format
+// *************************************
+
 import { makeDictionary, getDurationInDays, getRentalPercentageParts, getRentalMagnitudePerDay, roundTo } from '../utility.js'
 
+const CELL_FORMATS = {
+	CURRENCY: '$0.00', 
+	PERCENTAGE: '0.00%'
+}
+
 export class ProjectRentalCosts {
+
 	constructor(customers, items, reservations) {
+		// report is created when we initialize an instance of the calls
 		const { details, summary }  = createReport(customers, items, reservations)
 
 		this._details = details
@@ -14,11 +26,11 @@ export class ProjectRentalCosts {
 
 	get detailsFormats() {
 		return { 
-			I: '$0.00', 
-			K: '0.00%', 
-			M: '0.00%', 
-			N: '$0.00', 
-			O: '$0.00'
+			I: CELL_FORMATS.CURRENCY,
+			K: CELL_FORMATS.PERCENTAGE,
+			M: CELL_FORMATS.PERCENTAGE,
+			N: CELL_FORMATS.CURRENCY,
+			O: CELL_FORMATS.CURRENCY,
 		}
 	}
 
@@ -28,9 +40,9 @@ export class ProjectRentalCosts {
 
 	get summaryFormats() {
 		return { 
-			G: '$0.00', 
-			H: '$0.00', 
-			I: '$0.00'
+			G: CELL_FORMATS.CURRENCY,
+			H: CELL_FORMATS.CURRENCY,
+			I: CELL_FORMATS.CURRENCY
 		}
 	}
 }
@@ -40,23 +52,30 @@ export default ProjectRentalCosts
 
 function createReport(customers, items, reservations) {
 
+	// create dictionaries to avoid having to cycle through long lists of items repeatedly
 	const customerDictionary = makeDictionary(customers, c => c._id)
 	const itemDictionary = makeDictionary(items, i => i._id)
 
+	// prepare a summary report dictionary so that we don't have to 
+	// go through the details report a second time to summarize
 	const summaryReportDictionary = {}
 
+	// The details report has a row for every time in each reservation
 	const details = reservations.flatMap(reservation => reservation.items.map(itemId => {
 		let detailRow = {}
-		let summaryRow = summaryReportDictionary[reservation._id] || {}
 
+		// we may have already created a summary row for this item row
+		let summaryRow = summaryReportDictionary[reservation._id] || {}
 		if (!summaryReportDictionary[reservation._id]) {
 			summaryReportDictionary[reservation._id] = summaryRow
 		}
 
+		// find corresponding item and customer in our dictionaries
 		let item = itemDictionary[itemId]
 		let customer = customerDictionary[reservation.customer]
 
 		if (item) {
+			// add detail row data (and summary row data if not already added)
 			detailRow['ReservationId'] = reservation._id
 			summaryRow['ReservationId'] ??= reservation._id
 
@@ -112,6 +131,7 @@ function createReport(customers, items, reservations) {
 		return detailRow
 	}))
 
+	// do a final rouding operation to format data nicely
 	const summary = Object.values(summaryReportDictionary)
 		.map(s => {
 			s['Rental Cost / Day'] = roundTo(s['Rental Cost / Day'], 2)

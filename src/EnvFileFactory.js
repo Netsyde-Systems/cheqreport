@@ -1,3 +1,7 @@
+// *******************************************************
+// Handles reading and writing userId and jwt to .env file
+// *******************************************************
+
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'

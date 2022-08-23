@@ -12,8 +12,26 @@ export class ProjectRentalCosts {
 		return this._details
 	}
 
+	get detailsFormats() {
+		return { 
+			I: '$0.00', 
+			K: '0.00%', 
+			M: '0.00%', 
+			N: '$0.00', 
+			O: '$0.00'
+		}
+	}
+
 	get summary() {
 		return this._summary
+	}
+
+	get summaryFormats() {
+		return { 
+			G: '$0.00', 
+			H: '$0.00', 
+			I: '$0.00'
+		}
 	}
 }
 
@@ -51,13 +69,15 @@ function createReport(customers, items, reservations) {
 			detailRow['ItemId'] = itemId
 			detailRow['Equipment / Item'] = item.name
 
-			detailRow['Checkout Date'] = reservation.fromDate
-			summaryRow['Checkout Date'] ??= reservation.fromDate
+			const fromDate = new Date(reservation.fromDate)
+			detailRow['Checkout Date'] = fromDate
+			summaryRow['Checkout Date'] ??= fromDate
 
-			detailRow['Checkin Date'] = reservation.toDate
-			summaryRow['Checkin Date'] ??= reservation.toDate
+			const toDate = new Date(reservation.toDate)
+			detailRow['Checkin Date'] = toDate
+			summaryRow['Checkin Date'] ??= toDate
 
-			const rentalDurationInDays = getDurationInDays(reservation.fromDate, reservation.toDate)
+			const rentalDurationInDays = getDurationInDays(fromDate, toDate)
 			detailRow['Total Duration (Days)'] = rentalDurationInDays
 			summaryRow['Total Duration (Days)'] ??= rentalDurationInDays
 

@@ -11,8 +11,8 @@ export function makeDictionary(arr, keySeletor) {
 	return dictionary
 }
 
-export function getDurationInDays(fromDateString, toDateString) {
-	const durationInMs = new Date(toDateString) - new Date(fromDateString)
+export function getDurationInDays(fromDate, toDate) {
+	const durationInMs = toDate - fromDate
 	const durationInDays = durationInMs / 1000 / 60 / 60 / 24
 	const roundedDurationInDays = Math.round(durationInDays * 100) / 100
 	return roundedDurationInDays

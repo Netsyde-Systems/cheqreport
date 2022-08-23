@@ -11,11 +11,11 @@ const yargs = _yargs(hideBin(process.argv));
 import ServerApi from '../src/serverApi.js'
 import { ProjectRentalCosts } from '../src/reports/ProjectRentalCosts.js'
 
-/* test data
+/* test data*/
 import { docs as customerDocs } from '../dataSamples/customers_search.js'
 import { docs as itemDocs } from '../dataSamples/items_search.js'
 import { docs as reservationDocs } from '../dataSamples/reservations_search.js'
-*/
+
 
 import { defaultFilepath, timestampFilename } from '../src/utility.js'
 import { ExcelCreator } from '../src/ExcelCreator.js'
@@ -46,18 +46,21 @@ yargs
 			const api = new ServerApi(envFactory.userId, envFactory.jwt)
 
 			try {
+				/*
 				console.log('Loading customers...')
 				const customers = await api.getAllCustomers()
 				console.log('Loading equipment...')
 				const items = await api.getAllItems()
 				console.log('Loading reservations...')
 				const reservations = await api.getAllReservations()
+				*/
 
-				/* load test data
+
+				/* load test data*/
 				const customers = customerDocs
 				const items = itemDocs
 				const reservations = reservationDocs
-				*/
+				
 
 				// TODO: add support for different report types in the future
 				console.log(`Creating ${reportname} Report`)
@@ -65,8 +68,8 @@ yargs
 
 				const excelCreator = new ExcelCreator()
 
-				excelCreator.addSheet(report.summary, 'Summary')
-				excelCreator.addSheet(report.details, 'Details')
+				excelCreator.addSheet('Summary', report.summary, report.summaryFormats)
+				excelCreator.addSheet('Details', report.details, report.detailsFormats)
 
 				const filename = defaultFilepath(reportname)
 				excelCreator.saveFile(filename)

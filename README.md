@@ -41,7 +41,7 @@ Options:
 
 The first time you execute cheqreport, you must authenticate with your Cheqroom account details: 
 
-`cheqreport auth email@server.com cheqreportpassword`
+`cheqreport auth email@server.com cheqroompassword`
 
 This will store your Cheqroom userid and a jwt token for future use.  Subsequently, you can generate reports until your token expires (expiry time is controlled at Cheqroom's end): 
 

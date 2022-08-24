@@ -62,7 +62,7 @@ export class Api {
 		})
 	}
 
-	// gets '_limit' amount of recoreds '_skip' amount of records from the collection's beginning
+	// gets '_limit' amount of records, '_skip' amount of records from the collection's beginning
 	async getData(dataName, limit = 20, skip = 0) {
 		let response = await this.apiCall(`${dataName}/search`, {
 			_limit: limit,

@@ -59,6 +59,6 @@ Your cheqreport has been successfully saved to: C:\Users\username\projectrentalc
 
 At this time, only the requested *projectrentalcosts* report has been created.  It is run by default regardless of the reportname parameter provided, or even if it is is omitted.  
 
-Future reports should be easy to create since authentication, data api integration, token storage, and excel reporting logic has already been implemented. If and when more than report is available to execute, they will be specified by name: 
+Future reports should be easy to create since authentication, data api integration, token storage, and excel reporting logic has already been implemented. If and when more than one report is available to execute, they can be specified by name: 
 
 `cheqreport run reportname`

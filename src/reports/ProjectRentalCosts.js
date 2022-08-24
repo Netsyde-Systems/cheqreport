@@ -60,7 +60,7 @@ function createReport(customers, items, reservations) {
 	// go through the details report a second time to summarize
 	const summaryReportDictionary = {}
 
-	// The details report has a row for every time in each reservation
+	// The details report has a row for every item in each reservation
 	const details = reservations.flatMap(reservation => reservation.items.map(itemId => {
 		let detailRow = {}
 
@@ -131,7 +131,7 @@ function createReport(customers, items, reservations) {
 		return detailRow
 	}))
 
-	// do a final rouding operation to format data nicely
+	// do a final rounding operation to format data nicely
 	const summary = Object.values(summaryReportDictionary)
 		.map(s => {
 			s['Rental Cost / Day'] = roundTo(s['Rental Cost / Day'], 2)

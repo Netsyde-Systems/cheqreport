@@ -18,6 +18,16 @@ Once you have a Node runtime installed, install CheqReport via npm:
 
 `npm i -g https://github.com/Netsyde-Systems/cheqreport.git`
 
+### Installation Errors
+
+If you experience an unusual error when running the cheqreport install command, it may be due to a known issue with some recent versions of npm.  Update your npm version using the following command:  
+
+`npm i -g npm@8.18.0`
+
+And then try to install CheqReport again: 
+
+`npm i -g https://github.com/Netsyde-Systems/cheqreport.git`
+
 ## Usage
 
 `cheqreport`  

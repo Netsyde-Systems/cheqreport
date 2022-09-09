@@ -28,6 +28,30 @@ And then try to install CheqReport again:
 
 `npm i -g https://github.com/Netsyde-Systems/cheqreport.git`
 
+### Local Install Alternative
+
+If still receiving odd errors, you can try a local installation which separates the git pull and npm install steps, and forces an installation location of your choice. 
+
+Check to see you have a local copy of [git](https://git-scm.com/) installed: 
+
+`git --version`
+
+If this command returns an error then install the latest version of git [from here](https://git-scm.com/downloads).
+
+After git is installed, navigate to a local directory of your choice where you have full read/write privileges.  
+
+Clone a local copy of the CheqReport repository as follows: 
+
+`git clone https://github.com/Netsyde-Systems/cheqreport.git`
+
+Navigate to the newly created cheqreport subdirectory and install cheqreport and its dependencies: 
+
+`npm i`
+
+Then install it globally to your machine so that it can be accessed via command line anywhere: 
+
+`npm i -g`
+
 ## Usage
 
 `cheqreport`  

@@ -18,47 +18,15 @@ Once you have a Node runtime installed, install CheqReport via npm:
 
 `npm i -g https://github.com/Netsyde-Systems/cheqreport.git`
 
-### Installation Errors
-
-If you experience an unusual error when running the cheqreport install command, it may be due to a known issue with some recent versions of npm.  Update your npm version using the following command:  
-
-`npm i -g npm@8.18.0`
-
-And then try to install CheqReport again: 
-
-`npm i -g https://github.com/Netsyde-Systems/cheqreport.git`
-
-### Local Install Alternative
-
-If still receiving odd errors, you can try a local installation which separates the git pull and npm install steps, and forces an installation location of your choice. 
-
-Check to see you have a local copy of [git](https://git-scm.com/) installed: 
-
-`git --version`
-
-If this command returns an error then install the latest version of git [from here](https://git-scm.com/downloads).
-
-After git is installed, navigate to a local directory of your choice where you have full read/write privileges.  
-
-Clone a local copy of the CheqReport repository as follows: 
-
-`git clone https://github.com/Netsyde-Systems/cheqreport.git`
-
-Navigate to the newly created cheqreport subdirectory and install cheqreport and its dependencies: 
-
-`npm i`
-
-Then install it globally to your machine so that it can be accessed via command line anywhere: 
-
-`npm i -g`
-
 ## Usage
+
+Running either 
 
 `cheqreport`  
 or   
 `cheqreport --help`  
 
-Returns the following help information: 
+returns the following help information: 
 
 ```
 cheqreport <cmd> [args]
@@ -96,3 +64,37 @@ At this time, only the requested *projectrentalcosts* report has been created.  
 Future reports should be easy to create since authentication, data api integration, token storage, and excel reporting logic has already been implemented. If and when more than one report is available to execute, they can be specified by name: 
 
 `cheqreport run reportname`
+
+## Installation Errors
+
+If you experience an unusual error when running the cheqreport install command, it may be due to a known issue with some recent versions of npm.  Update your npm version using the following command:  
+
+`npm i -g npm@8.18.0`
+
+And then try to install CheqReport again: 
+
+`npm i -g https://github.com/Netsyde-Systems/cheqreport.git`
+
+### Local Install Alternative
+
+If still receiving odd errors, you can try a local installation which separates the git pull and npm install steps, and forces an installation location of your choice. 
+
+Check to see you have a local copy of [git](https://git-scm.com/) installed: 
+
+`git --version`
+
+If this command returns an error then install the latest version of git [from here](https://git-scm.com/downloads).
+
+After git is installed, navigate to a local directory of your choice where you have full read/write privileges.  
+
+Clone a local copy of the CheqReport repository as follows: 
+
+`git clone https://github.com/Netsyde-Systems/cheqreport.git`
+
+Navigate to the newly created cheqreport subdirectory and install cheqreport and its dependencies: 
+
+`npm i`
+
+Then install it globally to your machine so that it can be accessed via command line anywhere: 
+
+`npm i -g`

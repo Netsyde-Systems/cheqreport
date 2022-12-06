@@ -110,12 +110,28 @@ export class Api {
 		return this.getAllData(`reservations`)
 	}
 
+	async getOrders(limit, skip) {
+		return this.getData(`orders`, limit, skip) 
+	}
+
+	async getAllOrders() {
+		return this.getAllData(`orders`)
+	}
+
 	async getCustomers(limit, skip) {
 		return this.getData(`customers`, limit, skip) 
 	}
 
 	async getAllCustomers() {
 		return this.getAllData(`customers`)
+	}
+
+	async getUsers(limit, skip) {
+		return this.getData(`users`, limit, skip) 
+	}
+
+	async getAllUsers() {
+		return this.getAllData(`users`)
 	}
 }
 

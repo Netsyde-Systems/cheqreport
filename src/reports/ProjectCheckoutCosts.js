@@ -10,11 +10,11 @@ const CELL_FORMATS = {
 	PERCENTAGE: '0.00%'
 }
 
-export class ProjectRentalCosts {
+export class ProjectCheckoutCosts {
 
-	constructor(customers, items, reservations) {
+	constructor(customers, items, orders) {
 		// report is created when we initialize an instance of the calls
-		const { details, summary }  = createReport(customers, items, reservations)
+		const { details, summary }  = createReport(customers, items, orders)
 
 		this._details = details
 		this._summary = summary
@@ -47,10 +47,10 @@ export class ProjectRentalCosts {
 	}
 }
 
-export default ProjectRentalCosts
+export default ProjectCheckoutCosts
 
 
-function createReport(customers, items, reservations) {
+function createReport(customers, items, orders) {
 
 	// create dictionaries to avoid having to cycle through long lists of items repeatedly
 	const customerDictionary = makeDictionary(customers, c => c._id)
@@ -61,26 +61,26 @@ function createReport(customers, items, reservations) {
 	const summaryReportDictionary = {}
 
 	// The details report has a row for every item in each reservation
-	const details = reservations.flatMap(reservation => reservation.items.map(itemId => {
+	const details = orders.flatMap(order => order.items.map(itemId => {
 		let detailRow = {}
 
 		// we may have already created a summary row for this item row
-		let summaryRow = summaryReportDictionary[reservation._id] || {}
-		if (!summaryReportDictionary[reservation._id]) {
-			summaryReportDictionary[reservation._id] = summaryRow
+		let summaryRow = summaryReportDictionary[order._id] || {}
+		if (!summaryReportDictionary[order._id]) {
+			summaryReportDictionary[order._id] = summaryRow
 		}
 
 		// find corresponding item and customer in our dictionaries
 		let item = itemDictionary[itemId]
-		let customer = customerDictionary[reservation.customer]
+		let customer = customerDictionary[order.customer]
 
 		if (item) {
 			// add detail row data (and summary row data if not already added)
-			detailRow['ReservationId'] = reservation._id
-			summaryRow['ReservationId'] ??= reservation._id
+			detailRow['OrderNumber'] = order.number
+			summaryRow['OrderNumber'] ??= order.number
 
-			detailRow['Project Number / Name'] = reservation.fields['Project Number']
-			summaryRow['Project Number / Name'] ??= reservation.fields['Project Number']
+			detailRow['Project Number / Name'] = order.fields['Project Number']
+			summaryRow['Project Number / Name'] ??= order.fields['Project Number']
 
 			detailRow['Customer name'] = customer?.name ?? 'Unknown'
 			summaryRow['Customer name'] ??= customer?.name ?? 'Unknown'
@@ -88,23 +88,29 @@ function createReport(customers, items, reservations) {
 			detailRow['ItemId'] = itemId
 			detailRow['Equipment / Item'] = item.name
 
-			const fromDate = new Date(reservation.fromDate)
-			detailRow['Checkout Date'] = fromDate
-			summaryRow['Checkout Date'] ??= fromDate
+			const fromDate = new Date(order.started)
+			detailRow['Order Started'] = fromDate
+			summaryRow['Order Started'] ??= fromDate
 
-			const toDate = new Date(reservation.toDate)
-			detailRow['Checkin Date'] = toDate
-			summaryRow['Checkin Date'] ??= toDate
+			let toDate = null
+			if (order.finished) {
+				toDate = new Date(order.finished)
+				detailRow['Order Finished'] = toDate
+				summaryRow['Order Finished'] ??= toDate
+			}
 
-			const rentalDurationInDays = getDurationInDays(fromDate, toDate)
-			detailRow['Total Duration (Days)'] = rentalDurationInDays
-			summaryRow['Total Duration (Days)'] ??= rentalDurationInDays
+			let rentalDurationInDays = null
+			if (toDate) {
+				rentalDurationInDays = getDurationInDays(fromDate, toDate)
+				detailRow['Total Duration (Days)'] = rentalDurationInDays
+				summaryRow['Total Duration (Days)'] ??= rentalDurationInDays
+			}
 
 			detailRow['Purchase Price'] = item.purchasePrice
 			summaryRow['Purchase Price'] ??= 0
 			summaryRow['Purchase Price'] += item.purchasePrice
 
-			const rentalPercentage = reservation.fields['Rental Percentage']
+			const rentalPercentage = order.fields['Rental Percentage']
 			detailRow['Rental Percentage'] = rentalPercentage
 
 			const { rentalMagnitude, rentalUnit } = getRentalPercentageParts(rentalPercentage)
@@ -119,10 +125,20 @@ function createReport(customers, items, reservations) {
 			summaryRow['Rental Cost / Day'] ??= 0
 			summaryRow['Rental Cost / Day'] += rentalCostPerDay
 
-			const rentalCost = roundTo(rentalDurationInDays * rentalMagnitudePerDay * item.purchasePrice, 2) 
-			detailRow['Rental Cost'] = rentalCost
-			summaryRow['Rental Cost'] ??= 0
-			summaryRow['Rental Cost'] += rentalCost
+			if (rentalDurationInDays) {
+				const rentalCost = roundTo(rentalDurationInDays * rentalMagnitudePerDay * item.purchasePrice, 2)
+				detailRow['Rental Cost'] = rentalCost
+				summaryRow['Rental Cost'] ??= 0
+				summaryRow['Rental Cost'] += rentalCost
+			}
+
+			detailRow['OrderId'] = order._id
+			summaryRow['OrderId'] ??= order._id
+
+			detailRow['ReservationId'] = order.reservation
+			summaryRow['ReservationId'] ??= order.reservation
+
+			summaryRow['Comments'] ??= order.fields.Comments
 		}
 		else {
 			detailRow.Error = `Could not find item with ID ${itemId}`

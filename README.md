@@ -47,23 +47,21 @@ The first time you execute cheqreport, you must authenticate with your Cheqroom 
 
 This will store your Cheqroom userid and a jwt token for future use.  Subsequently, you can generate reports until your token expires (expiry time is controlled at Cheqroom's end): 
 
-`cheqreport run`
+`cheqreport run reportname`
 
-This command should present you with output similar to the following.  Note that it is normal for the data loading process to take several seconds.  
+where reportname is either of `reservationcosts` or `ordercosts`.
+
+If reportname is omitted, the default `reservationcosts` report is executed.
+
+Running a report should present you with output similar to the following.  Note that it is normal for the data loading process to take several seconds.  
 
 ```
 Loading customers...
 Loading equipment...
 Loading reservations...
-Creating projectrentalcosts Report
-Your cheqreport has been successfully saved to: C:\Users\username\projectrentalcosts_2022-08-23T01-07-04_328Z.xlsx
+Creating reservationcosts Report
+Your cheqreport has been successfully saved to: C:\Users\username\reservationcosts_2022-08-23T01-07-04_328Z.xlsx
 ```
-
-At this time, only the requested *projectrentalcosts* report has been created.  It is run by default regardless of the reportname parameter provided, or even if it is is omitted.  
-
-Future reports should be easy to create since authentication, data api integration, token storage, and excel reporting logic has already been implemented. If and when more than one report is available to execute, they can be specified by name: 
-
-`cheqreport run reportname`
 
 ## Installation Errors
 

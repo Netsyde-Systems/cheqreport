@@ -15,12 +15,14 @@ const yargs = _yargs(hideBin(process.argv));
 
 // const BrowserApi = require('../src/browserApi')
 import ServerApi from '../src/serverApi.js'
-import { ProjectRentalCosts } from '../src/reports/ProjectRentalCosts.js'
+import { ProjectReservationCosts } from '../src/reports/ProjectReservationCosts.js'
+import { ProjectCheckoutCosts } from '../src/reports/ProjectCheckoutCosts.js'
 
-/* test data
+/* test data 
 import { docs as customerDocs } from '../dataSamples/customers_search.js'
 import { docs as itemDocs } from '../dataSamples/items_search.js'
 import { docs as reservationDocs } from '../dataSamples/reservations_search.js'
+import { docs as orderDocs } from '../dataSamples/orders_search.js'
 */
 
 import { defaultFilepath } from '../src/utility.js'
@@ -35,7 +37,7 @@ yargs
 	.command('run [reportname]', 'Runs custom report', (yargs) => {
 		yargs.positional('reportname', {
 			type: 'string',
-			default: 'projectrentalcosts',
+			default: 'reservationcosts',
 			describe: 'the name of the custom report'
 		})
 	}, async function (argv) {
@@ -57,20 +59,36 @@ yargs
 			try {
 				console.log('Loading customers...')
 				const customers = await api.getAllCustomers()
+				// const customers = customerDocs
+
 				console.log('Loading equipment...')
 				const items = await api.getAllItems()
-				console.log('Loading reservations...')
-				const reservations = await api.getAllReservations()
+				// const items = itemDocs
 
-				/* load test data
-				const customers = customerDocs
-				const items = itemDocs
-				const reservations = reservationDocs
-				*/
+				var report = null
 
-				// TODO: add support for different report types in the future
-				console.log(`Creating ${reportname} Report`)
-				const report = new ProjectRentalCosts(customers, items, reservations)
+				switch (reportname) {
+					case 'reservationcosts': 
+						console.log('Loading reservations...')
+						const reservations = await api.getAllReservations()
+						// const reservations = reservationDocs
+
+						console.log(`Creating ${reportname} Report`)
+						report = new ProjectReservationCosts(customers, items, reservations)
+						break
+
+					case 'checkoutcosts': 
+						console.log('Loading check-outs...')
+						const orders = await api.getAllOrders()
+						// const orders = orderDocs
+
+						console.log(`Creating ${reportname} Report`)
+						report = new ProjectCheckoutCosts(customers, items, orders)
+						break
+
+					default: 
+						throw new Error(`Unknown report type: ${reportname}.  Supported report types are: reservationcosts & checkoutcosts`)
+				}
 
 				const excelCreator = new ExcelCreator()
 
@@ -89,7 +107,6 @@ yargs
 			}
 
 		}
-
 	})
 
 	// authenticates user

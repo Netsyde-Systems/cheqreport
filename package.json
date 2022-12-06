@@ -1,6 +1,6 @@
 {
   "name": "cheqreport",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A command line utility for creating custom cheqroom reports",
   "main": "bin/index.js",
   "bin": {

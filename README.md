@@ -49,7 +49,7 @@ This will store your Cheqroom userid and a jwt token for future use.  Subsequent
 
 `cheqreport run reportname`
 
-where reportname is either of `reservationcosts` or `ordercosts`.
+where reportname is either of `reservationcosts` or `checkoutcosts`.
 
 If reportname is omitted, the default `reservationcosts` report is executed.
 

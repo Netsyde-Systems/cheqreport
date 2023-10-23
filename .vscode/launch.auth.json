@@ -14,8 +14,8 @@
 			"program": "${workspaceFolder}\\bin\\index.js", 
 			"args": [
 				"auth",
-				"miro@g360group.org",
-				"Cheq53Room40!"
+				"email.required@here.com",
+				"Password_Required_Here_123!"
 			]
 		}
 	]

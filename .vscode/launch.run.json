@@ -13,7 +13,8 @@
 			],
 			"program": "${workspaceFolder}\\bin\\index.js", 
 			"args": [
-				"run"
+				"run",
+				// optional report name here (checkoutcosts|reserverationcosts|etc)
 			]
 		}
 	]

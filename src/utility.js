@@ -25,6 +25,10 @@ export function getDurationInDays(fromDate, toDate) {
 }
 
 export function getRentalPercentageParts(rentalPercentage) {
+	// TODO: investigate why rentalPercentage is sometimes undefined
+	// appears to have been a one-off issue...
+	// if (!rentalPercentage) return [undefined, undefined]
+
 	const [rentalMagnitudeString, rentalUnit] = rentalPercentage.split('/').map(s => s.trim())
 	const rentalMagnitude = Number(rentalMagnitudeString.replace('%', '')) / 100
 	return { 

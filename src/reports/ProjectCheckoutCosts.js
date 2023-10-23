@@ -88,6 +88,9 @@ function createReport(customers, items, orders) {
 			detailRow['ItemId'] = itemId
 			detailRow['Equipment / Item'] = item.name
 
+			summaryRow['Equipment / Items'] ??= '|'
+			summaryRow['Equipment / Items'] += ` ${item.name} |`
+
 			const fromDate = new Date(order.started)
 			detailRow['Order Started'] = fromDate
 			summaryRow['Order Started'] ??= fromDate

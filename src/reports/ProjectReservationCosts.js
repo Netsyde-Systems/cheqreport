@@ -88,6 +88,9 @@ function createReport(customers, items, reservations) {
 			detailRow['ItemId'] = itemId
 			detailRow['Equipment / Item'] = item.name
 
+			summaryRow['Equipment / Items'] ??= '|'
+			summaryRow['Equipment / Items'] += ` ${item.name} |`
+
 			const fromDate = new Date(reservation.fromDate)
 			detailRow['Reserved From'] = fromDate
 			summaryRow['Reserved From'] ??= fromDate

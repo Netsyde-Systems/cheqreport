@@ -24,25 +24,41 @@ export function getDurationInDays(fromDate, toDate) {
 	return roundedDurationInDays
 }
 
-export function getRentalPercentageParts(rentalPercentage) {
-	// TODO: investigate why rentalPercentage is sometimes undefined
-	if (!rentalPercentage) return [undefined, undefined]
+const DAYS_IN_RENTAL_UNIT = {
+	'Day': 1, 
+	'Week': 7, 
+	'Month': 30
+}
 
-	const [rentalMagnitudeString, rentalUnit] = rentalPercentage.split('/').map(s => s.trim())
+const isValidRentalUnit = rentalUnit => !!DAYS_IN_RENTAL_UNIT[rentalUnit]
+
+export function getRentalPercentageParts(rentalPercentage) {
+
+	if (!rentalPercentage) return {
+		rentalMagnitude: 0, 
+		rentalUnit: 'Day', 
+		rentalPercentageError: 'Error: Rental Percentage is empty. Defaulting to 0% / Day'
+	}
+
+	// rental percentage is typically a string like '10% / Day'
+	let [rentalMagnitudeString, rentalUnit] = rentalPercentage.split('/').map(s => s.trim())
+
+	// but it can sometimes be of the form '12% / Month (Trucks $2100/month)'
+	rentalUnit = rentalUnit.split(' ')[0].trim()
+
+	if (!isValidRentalUnit(rentalUnit)) throw new Error(`Rental Unit is invalid: ${rentalUnit}`)
+
 	const rentalMagnitude = Number(rentalMagnitudeString.replace('%', '')) / 100
+
 	return { 
 		rentalMagnitude, 
-		rentalUnit 
+		rentalUnit,
+		rentalPercentageError: undefined
 	}
 }
 
 export function getRentalMagnitudePerDay(rentalMagnitude, rentalUnit) {
-	const daysInUnit = {
-		'Day': 1, 
-		'Week': 7, 
-		'Month': 30
-	}
-	return rentalMagnitude / daysInUnit[rentalUnit]
+	return rentalMagnitude / DAYS_IN_RENTAL_UNIT[rentalUnit]
 }
 
 export function roundTo(value, numDecimals) {

@@ -18,12 +18,12 @@ import ServerApi from '../src/serverApi.js'
 import { ProjectReservationCosts } from '../src/reports/ProjectReservationCosts.js'
 import { ProjectCheckoutCosts } from '../src/reports/ProjectCheckoutCosts.js'
 
-/* test data 
-import { docs as customerDocs } from '../dataSamples/customers_search.js'
-import { docs as itemDocs } from '../dataSamples/items_search.js'
-import { docs as reservationDocs } from '../dataSamples/reservations_search.js'
-import { docs as orderDocs } from '../dataSamples/orders_search.js'
-*/
+const USE_SAMPLE_DATA = false
+
+import { docs as customerSamples } from '../dataSamples/customers_search.js'
+import { docs as itemSamples } from '../dataSamples/items_search.js'
+import { docs as reservationSamples } from '../dataSamples/reservations_search.js'
+import { docs as orderSamples } from '../dataSamples/orders_search.js'
 
 import { defaultFilepath } from '../src/utility.js'
 import { ExcelCreator } from '../src/ExcelCreator.js'
@@ -58,20 +58,17 @@ yargs
 
 			try {
 				console.log('Loading customers...')
-				const customers = await api.getAllCustomers()
-				// const customers = customerDocs
+				const customers = USE_SAMPLE_DATA ? customerSamples : await api.getAllCustomers()
 
 				console.log('Loading equipment...')
-				const items = await api.getAllItems()
-				// const items = itemDocs
+				const items = USE_SAMPLE_DATA ? itemSamples : await api.getAllItems()
 
 				var report = null
 
 				switch (reportname) {
 					case 'reservationcosts': 
 						console.log('Loading reservations...')
-						const reservations = await api.getAllReservations()
-						// const reservations = reservationDocs
+						const reservations = USE_SAMPLE_DATA ? reservationSamples : await api.getAllReservations()
 
 						console.log(`Creating ${reportname} Report`)
 						report = new ProjectReservationCosts(customers, items, reservations)
@@ -79,8 +76,7 @@ yargs
 
 					case 'checkoutcosts': 
 						console.log('Loading check-outs...')
-						const orders = await api.getAllOrders()
-						// const orders = orderDocs
+						const orders = USE_SAMPLE_DATA ? orderSamples : await api.getAllOrders()
 
 						console.log(`Creating ${reportname} Report`)
 						report = new ProjectCheckoutCosts(customers, items, orders)

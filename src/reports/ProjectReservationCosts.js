@@ -40,9 +40,9 @@ export class ProjectReservationCosts {
 
 	get summaryFormats() {
 		return { 
-			G: CELL_FORMATS.CURRENCY,
 			H: CELL_FORMATS.CURRENCY,
-			I: CELL_FORMATS.CURRENCY
+			I: CELL_FORMATS.CURRENCY, 
+			J: CELL_FORMATS.CURRENCY,
 		}
 	}
 }
@@ -110,7 +110,7 @@ function createReport(customers, items, reservations) {
 			const rentalPercentage = reservation.fields['Rental Percentage']
 			detailRow['Rental Percentage'] = rentalPercentage
 
-			const { rentalMagnitude, rentalUnit } = getRentalPercentageParts(rentalPercentage)
+			const { rentalMagnitude, rentalUnit, rentalPercentageError } = getRentalPercentageParts(rentalPercentage)
 			detailRow['Rental Magnitude'] = rentalMagnitude
 			detailRow['Rental Unit'] = rentalUnit
 
@@ -134,6 +134,12 @@ function createReport(customers, items, reservations) {
 			summaryRow['OrderId'] ??= reservation.order
 
 			summaryRow['Comments'] ??= reservation.fields.Comments
+
+			if (rentalPercentageError) {
+				detailRow.Error = rentalPercentageError
+				if (!summaryRow.Error) summaryRow.Error = rentalPercentageError
+				else summaryRow.Error += ` & ${rentalPercentageError}`
+			}
 		}
 		else {
 			detailRow.Error = `Could not find item with ID ${itemId}`
